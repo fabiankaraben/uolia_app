@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "855479125608",
+    "project_id": "uolia-app",
+    "storage_bucket": "uolia-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855479125608:android:2bdb5e2cb49a980c7c5ddd",
+        "android_client_info": {
+          "package_name": "com.uolia.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855479125608-splqglu8dv49kdofag30kv82pke78vt2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uolia.app",
+            "certificate_hash": "811f82313d549708b803e83b80e3f6e0699f8bc1"
+          }
+        },
+        {
+          "client_id": "855479125608-t9m874bfsi91aud5qnbqo4bg9ujh1ceq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uolia.app",
+            "certificate_hash": "9923b678c56e15d463ac70e7d63de3b764f0e6fe"
+          }
+        },
+        {
+          "client_id": "855479125608-bv98gjlbh1u0eksi3ti3jrsv5e6vjlie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZeyPffdyitpsnYvI0eLlHFR8vOnCHH2I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "855479125608-bv98gjlbh1u0eksi3ti3jrsv5e6vjlie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-5376430835440290~2673720719"
+    }
+  ],
+  "configuration_version": "1"
+}
