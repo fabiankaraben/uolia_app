@@ -1,100 +1,142 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uolia_app/app/providers/app_provider.dart';
-import 'package:uolia_app/app/providers/locale_provider.dart';
-import 'package:uolia_app/app/themes/colors.dart';
+import 'package:go_router/go_router.dart';
+import 'package:uolia_app/app/data/models/folder.dart';
+import 'package:uolia_app/app/data/models/resource_preview.dart';
+import 'package:uolia_app/screens/account/account_routes.dart';
+import 'package:uolia_app/screens/library/widgets/folder_card.dart';
+import 'package:uolia_app/screens/library/widgets/resource_card.dart';
+import 'package:uolia_app/utils/icons/uolia_icons.dart';
 
 /// Library Screen
 class LibraryScreen extends ConsumerWidget {
   /// Library Screen
-  const LibraryScreen({super.key});
+  LibraryScreen({super.key});
+
+  final _mainScrollController = ScrollController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Get the `CustomColors` typed object in the `ThemeData` extension
-    final customColors = Theme.of(context).extension<CustomColors>()!;
     final l10n = AppLocalizations.of(context)!;
 
-    final locale = ref.watch(localeProvider);
+    // final locale = ref.watch(localeProvider);
+
+    const mockFolder = Folder(
+      id: 0,
+      title: 'A folder',
+      folderId: 0,
+    );
+
+    final mockResourcePreview = ResourcePreview(
+      id: 0,
+      title: 'A Course',
+      author: 'The author',
+      folderId: 0,
+      isPlaylist: false,
+      lastActivityAt: DateTime.now().toUtc().subtract(const Duration(hours: 3)),
+      numBookmarks: 0,
+      numNotes: 0,
+      numTodos: 0,
+      numVideos: 0,
+      progress: .6,
+      singleVideoDuration: const Duration(minutes: 5),
+      sourceVideoId: '0iGawG2BTVo',
+    );
+
+    final mockResourcePreviewPlaylist = mockResourcePreview.copyWith(
+      isPlaylist: true,
+    );
 
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Library ${l10n.gotIt}'),
-          const SizedBox(height: 30, width: double.infinity),
-          const _ToggleThemeIconButton(),
-          const SizedBox(height: 30, width: double.infinity),
-          Text(locale != null ? locale.toString() : 'System'),
-          const SizedBox(height: 30, width: double.infinity),
-          OutlinedButton(
-            onPressed: () => ref.read(localeProvider.notifier).toggle(),
-            child: const Text('Toggle language'),
-          ),
-          const SizedBox(height: 30, width: double.infinity),
-          OutlinedButton(
+      appBar: AppBar(
+        title: Text(l10n.yourLibraries),
+        actions: [
+          IconButton(
+            icon: const Icon(UoliaIcons.account),
             onPressed: () {
-              ref.read(localeProvider.notifier).locale = const Locale('es');
+              context.go(AccountRoutes.route.path);
             },
-            child: const Text('Change language to ES'),
           ),
-          const SizedBox(height: 30, width: double.infinity),
-          OutlinedButton(
-            onPressed: () {
-              ref.read(localeProvider.notifier).locale = const Locale('en');
-            },
-            child: const Text('Change language to EN'),
-          ),
-          const SizedBox(height: 30, width: double.infinity),
-          OutlinedButton(
-            onPressed: () => ref.read(localeProvider.notifier).setSystem(),
-            child: const Text('Change language System'),
-          ),
+          const SizedBox(width: 10),
         ],
+      ),
+      body: SelectionArea(
+        child: Column(
+          children: [
+            const SubAppBar(),
+            Expanded(
+              child: Scrollbar(
+                controller: _mainScrollController,
+                thumbVisibility: MediaQuery.of(context).size.width > 500,
+                child: ListView(
+                  controller: _mainScrollController,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 15,
+                    horizontal: 20,
+                  ),
+                  children: [
+                    for (int i = 0; i < 2; i++)
+                      const FolderCard(
+                        folder: mockFolder,
+                      ),
+                    for (int i = 0; i < 2; i++)
+                      ResourceCard(
+                        resourcePreview: mockResourcePreview,
+                      ),
+                    for (int i = 0; i < 2; i++)
+                      ResourceCard(
+                        resourcePreview: mockResourcePreviewPlaylist,
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _ToggleThemeIconButton extends StatefulWidget {
-  const _ToggleThemeIconButton();
-
-  @override
-  State<_ToggleThemeIconButton> createState() => _ToggleThemeIconButtonState();
-}
-
-class _ToggleThemeIconButtonState extends State<_ToggleThemeIconButton> {
-  AdaptiveThemeMode mode = AdaptiveThemeMode.light;
+///
+class SubAppBar extends StatelessWidget {
+  ///
+  const SubAppBar({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<AdaptiveThemeMode>(
-      future: Future.microtask(
-        () async =>
-            await AdaptiveTheme.getThemeMode() ?? AdaptiveThemeMode.light,
+    return Container(
+      height: 50,
+      padding: const EdgeInsets.only(left: 20, right: 10),
+      decoration: BoxDecoration(
+        color: Theme.of(context).appBarTheme.backgroundColor,
       ),
-      initialData: AdaptiveThemeMode.light,
-      builder: (context, snapshot) {
-        mode = snapshot.data!;
-        return IconButton(
-          icon: Icon(
-            mode == AdaptiveThemeMode.light
-                ? Icons.dark_mode
-                : Icons.light_mode,
+      child: Row(
+        children: [
+          const Expanded(
+            child: Text('Library name'),
           ),
-          onPressed: () async {
-            if (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.light) {
-              AdaptiveTheme.of(context).setDark();
-              setState(() => mode = AdaptiveThemeMode.dark);
-            } else {
-              AdaptiveTheme.of(context).setLight();
-              setState(() => mode = AdaptiveThemeMode.light);
-            }
-          },
-        );
-      },
+          IconButton(
+            icon: const Icon(UoliaIcons.new_folder),
+            color: Theme.of(context).appBarTheme.actionsIconTheme!.color,
+            iconSize: 18,
+            onPressed: () {
+              context.go(AccountRoutes.route.path);
+            },
+          ),
+          IconButton(
+            icon: const Icon(UoliaIcons.more_vert),
+            color: Theme.of(context).appBarTheme.actionsIconTheme!.color,
+            iconSize: 18,
+            onPressed: () {
+              context.go(AccountRoutes.route.path);
+            },
+          ),
+        ],
+      ),
     );
   }
 }

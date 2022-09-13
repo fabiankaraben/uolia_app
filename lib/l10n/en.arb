@@ -75,11 +75,21 @@
     "@---------- Home (Library tab) module texts ----------": {},
     "yourLibraries": "Your libraries",
     "noItemsYet": "There are no items here yet",
-    "singularNumItems": "@num item",
-    "pluralNumItems": "@num items",
+    "numItems": "{count,plural, =1{1 item} other{{count} items}}",
+    "@numItems": {
+        "description": "A plural message",
+        "placeholders": {
+            "count": {}
+        }
+    },
     "and": "and",
-    "singularNumFolders": "@num folder",
-    "pluralNumFolders": "@num folders",
+    "numFolders": "{count,plural, =1{1 folder} other{{count} folders}}",
+    "@numFolders": {
+        "description": "A plural message",
+        "placeholders": {
+            "count": {}
+        }
+    },
     "author": "Author",
     "lastActivity": "Last activity",
     "ofLower": "of",

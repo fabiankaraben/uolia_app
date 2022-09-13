@@ -8,7 +8,7 @@ class LibraryRoutes {
     path: '/library',
     pageBuilder: (context, state) => NoTransitionPage(
       key: state.pageKey,
-      child: const LibraryScreen(),
+      child: LibraryScreen(),
     ),
   );
 }

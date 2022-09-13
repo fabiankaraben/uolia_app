@@ -1,28 +1,33 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
 
 /// StateNotifier for [localeProvider].
 class LocaleNotifier extends StateNotifier<Locale?> {
   /// We initialize the locale with null, the system locale.
-  LocaleNotifier() : super(null);
-
-  /// Change the current [Locale]. Use null for system locale.
-  set locale(Locale? locale) {
-    state = locale;
-    // Save on local storage
+  LocaleNotifier() : super(null) {
+    // Get possible stored locale config
+    final boxLocale = Hive.box<dynamic>('localConfig').get('locale') as String?;
+    // Set app locale
+    state = boxLocale != null ? Locale(boxLocale) : null;
   }
 
-  /// Get the current [Locale], or null for system locale.
-  Locale? get locale => state;
+  /// Change the current [Locale]. Use null for system locale.
+  Future<void> setLocale(Locale? locale) async {
+    // Set app locale
+    state = locale;
+    // Save on local storage
+    await Hive.box<dynamic>('localConfig').put('locale', locale?.languageCode);
+  }
 
   /// Set [Locale] to the system locale
-  void setSystem() {
-    locale = null;
+  Future<void> setSystem() async {
+    await setLocale(null);
   }
 
   /// Toggle the locale, using supported locales, and system locale as well.
-  void toggle() {
+  Future<void> toggle() async {
     const locales = AppLocalizations.supportedLocales;
     if (locales.isEmpty) {
       // Exit to avoid errors, system locale is set by default
@@ -31,13 +36,13 @@ class LocaleNotifier extends StateNotifier<Locale?> {
     final localeIdx = state != null ? locales.indexOf(state!) : -1;
     if (localeIdx == -1) {
       // Set the first supported locale if is system or unsupported locale.
-      locale = locales.first;
+      await setLocale(locales.first);
     } else if (localeIdx == locales.length - 1) {
       // Set the system locale after the last supported locale.
-      locale = null;
+      await setLocale(null);
     } else {
       // Set the next supported locale.
-      locale = locales[localeIdx + 1];
+      await setLocale(locales[localeIdx + 1]);
     }
   }
 }

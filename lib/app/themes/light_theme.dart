@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:uolia_app/app/themes/text_theme.dart';
 
 /// Light theme
 class LightTheme {
@@ -9,14 +9,16 @@ class LightTheme {
       seedColor: const Color(0xFFF2672E),
       primary: const Color(0xFFF2672E),
       onPrimary: Colors.white,
+      background: const Color(0xFFEEEEEE),
     ),
-    textTheme: GoogleFonts.poppinsTextTheme().copyWith(
-      bodyText1: GoogleFonts.poppinsTextTheme().bodyText1!.copyWith(
-            color: Colors.black,
-          ),
-      bodyText2: GoogleFonts.poppinsTextTheme().bodyText2!.copyWith(
-            color: Colors.black,
-          ),
+    textTheme: textTheme,
+  ).copyWith(
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.white,
+      actionsIconTheme: IconThemeData(
+        color: Color(0xff555555),
+      ),
+      foregroundColor: Colors.black,
     ),
   );
 }

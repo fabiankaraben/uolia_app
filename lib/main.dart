@@ -10,7 +10,7 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uolia_app/app/app.dart';
-import 'package:uolia_app/app/utils/auth/ensure_initialized_auth.dart';
+import 'package:uolia_app/utils/auth/ensure_initialized_auth.dart';
 import 'package:uolia_app/firebase_options.dart';
 
 void main() async {
@@ -22,29 +22,35 @@ void main() async {
 
   // Initialize Hive local storage
   if (kIsWeb) {
+    // Emulating remote db
     await Hive.openBox<Map<String, dynamic>>('users');
     await Hive.openBox<Map<String, dynamic>>('libraries');
     await Hive.openBox<Map<String, dynamic>>('resources');
+    // Only local and multipurpose key-value storage
+    await Hive.openBox<dynamic>('localConfig');
   } else {
     final appDocDir = await getApplicationSupportDirectory();
     final appDocPath = appDocDir.path;
+    // Emulating remote db
     await Hive.openBox<Map<String, dynamic>>('users', path: appDocPath);
     await Hive.openBox<Map<String, dynamic>>('libraries', path: appDocPath);
     await Hive.openBox<Map<String, dynamic>>('resources', path: appDocPath);
+    // Only local and multipurpose key-value storage
+    await Hive.openBox<dynamic>('localConfig', path: appDocPath);
   }
 
   // Initialize Firebase app
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
 
   // Configure Firebase auth providers
-  FlutterFireUIAuth.configureProviders([
-    const EmailProviderConfiguration(),
-  ]);
+  // FlutterFireUIAuth.configureProviders([
+  //   const EmailProviderConfiguration(),
+  // ]);
 
   // Wait until receiving the first data from Firebase Auth
-  await ensureInitializedAuth();
+  // await ensureInitializedAuth();
 
   // Init Google Analytics
   // final analytics = FirebaseAnalytics();
