@@ -45,6 +45,13 @@
             {
               "client_id": "855479125608-bv98gjlbh1u0eksi3ti3jrsv5e6vjlie.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "855479125608-stgbo7nh6mrbtfpbf1t0fflspc9r4o31.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.uolia.app"
+              }
             }
           ]
         }
